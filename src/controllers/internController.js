@@ -16,7 +16,7 @@ const createInterns = async function (req, res) {
     const { name, email, mobile, collegeName } = data;
     
     if (Object.keys(data).length == 0)
-      return res.status(400).send({ status: false, msg: "NO data provided" });
+      return res.status(400).send({ status: false, msg: "No data provided" });
 
     if(!isValid(collegeName)){return res.status(400).send({status:false,msg:"collegeName is required"})}
 
@@ -39,11 +39,11 @@ const createInterns = async function (req, res) {
     data.collegeId = isMatch._id;
 
     const newIntern = await InternModel.create(data);
-    return res.status(201).send({ status: true, msg: newIntern });
+     res.status(201).send({ status: true, msg: newIntern });
 
    } catch (error) {
     console.log(error);
-    return res.status(500).send({ msg: error.message });
+     res.status(500).send({status:false, msg: error.message });
   }
 };
 
