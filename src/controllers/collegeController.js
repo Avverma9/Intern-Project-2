@@ -43,7 +43,7 @@ const getColleges = async function (req, res) {
         if (!data) {return res.status(404).send({status:false, msg:"Please enter a valid collegeName abbreviation in lowercase"})}
         let collegeId=data._id
         let interns = await InternModels.find({ collegeId: collegeId }).select({name:1,mobile:1,email:1,_id:1})
-        if(!interns){return res.status(404).send({status:false,msg:"no interns applied for coolege"})}
+        if(!interns){return res.status(200).send({status:false,msg:"no interns applied for coolege"})}
         const obj = {
             name: data.name,
             fullName: data.fullName,
