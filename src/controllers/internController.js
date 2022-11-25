@@ -11,6 +11,7 @@ const isValid = function (value) {
 
 const createInterns = async function (req, res) {
   try {
+    res.header('Access-Control-Allow-Origin','*')
     let data = req.body;
     const { name, email, mobile, collegeName } = data;
     

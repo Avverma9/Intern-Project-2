@@ -35,28 +35,43 @@ const createcollege = async function (req, res) {
 
 
 //==========================================================
-const getColleges = async function (req, res) {
+const collegeDetails = async function (req, res) {
+    res.setHeader('Access-Control-Allow-Origin','*')
     try {
-        let collegeName = req.query.collegeName
-        if (!collegeName) { return res.status(400).send({status: false, msg:"College name is required"}) }
-        let collegeId = await CollegeModels.find({ name: collegeName  }).select({ _id: 1 })
-        if (collegeId.length==0) {return res.status(404).send({status:false, msg:"Please enter a valid collegeName abbreviation in lowercase"})}
-        let interns = await InternModels.find({ collegeId: collegeId }).select({ name: 1, email: 1, mobile: 1, _id: 1 })
-        let result = await CollegeModels.findOne({ name: collegeName}).select({ name: 1, fullName: 1, logoLink: 1, _id: 0 })
-
-        const obj = {
-            name: result.name,
-            fullName: result.fullName,
-            logoLink: result.logoLink,
-            interests: interns
+        const collegeName = req.query.collegeName;
+        //----------------college Name-------------------------------------
+        if (!collegeName) {
+            return res.status(400).send({ status: false, message: "Please provide college name" });
         }
-        return res.status(200).send({ status: true, data: obj })
-    }
-    catch (error) {
-        console.log(error)
-        return res.status(500).send({ msg: error.message })
-    }
-}
+        //--------------finding the colllege Detail-------------------------
+        const collegeDetails = await CollegeModels.findOne({ name: collegeName });
+        if (!collegeDetails) {
+            return res.status(400).send({ status: false, message: "No college appears with this college name" });
+        }
+        //----------------find intern data-----------------------------------
+        const interns = await InternModels.find({ collegeId: collegeDetails._id });
+        if (interns.length == 0) {
+            const college = {
+                name: collegeDetails.name,
+                fullName: collegeDetails.fullName,
+                logoLink: collegeDetails.logoLink,
+                interns: "No interns applied for internship at this college"
+            }
+            return res.status(200).send({ status: true, data: college });
+        }
+        else {
+            const college = {
+                name: collegeDetails.name,
+                fullName: collegeDetails.fullName,
+                logoLink: collegeDetails.logoLink,
+                interns: interns
+            }
+            return res.status(200).send({ status: true, data: college });
+        }
 
+    } catch (error) {
+        return res.status(500).send({ status: false, message: error.message });
+    }
+};
 module.exports.createcollege=createcollege
-module.exports.getColleges=getColleges
+module.exports.collegeDetails=collegeDetails
