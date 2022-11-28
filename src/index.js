@@ -10,7 +10,7 @@ app.use(bodyParser.urlencoded({extended :true}));
 
 mongoose.connect("mongodb+srv://Avverma:Avverma95766@avverma.2g4orpk.mongodb.net/group16Database?retryWrites=true&w=majority",
  {
-    newUrlParser : true
+    useNewUrlParser : true
  }
 )
 .then(() => console.log("MongoDB is connected"))

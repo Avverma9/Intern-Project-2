@@ -15,4 +15,4 @@ const validMobile=function(mobile){
     return mobileRegex.test(mobile)
 }
 
-model.exports = {valid,validEmail,validISBN,validMobile}
+module.exports = {valid,validEmail,validISBN,validMobile}
