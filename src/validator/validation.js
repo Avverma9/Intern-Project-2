@@ -14,5 +14,7 @@ const validMobile=function(mobile){
     const mobileRegex=/^\d{10}$/
     return mobileRegex.test(mobile)
 }
-
-module.exports = {valid,validEmail,validISBN,validMobile}
+const validReleasedAt = function (releasedAt) {
+    return /((\d{4}[\/-])(\d{2}[\/-])(\d{2}))/.test(releasedAt)
+}
+module.exports = {valid,validEmail,validISBN,validMobile,validReleasedAt}
