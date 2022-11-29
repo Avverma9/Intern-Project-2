@@ -82,20 +82,20 @@ const getBooks = async function(req,res){
 //===================================update books===========================================================//
 const updateBooks = async function (req, res){
 try {
-    let bookID = req.params._id
+    let bookID = req.params.bookId
     if(!isValidObjectId(bookID)) { return res.status(400).send({status : false , message : " please provide a valid id"})}
     if(Object.keys(bookID)==0) { return res.status(400).send({status : false, message : "Book id is required"})}
-    let data = req.query
+    let data = req.body
     if(Object.keys(data)==0){return res.status(400).send({status : false , message : "Data not provided"})}
-    let book = await bookModel.findById({bookID})
+    let book = await bookModel.findById(bookID)
     if(!book){ return res.status(400).send({status : false , message : "book is not available"})}
     const isDeleted = book.isDeleted
     if(isDeleted == true){ return res.status(400).send({ status : false , message : " Book is already deleted"})}
-    const uniqueISBN = await bookModel.findOne({ISBN : ISBN})
+    const uniqueISBN = await bookModel.findOne({ISBN : data.ISBN})
     if (uniqueISBN) { return res.status(400).send({ status : false, msg : "ISBN is already available"})}
-    const uniqueTitle = await bookModel.findOne({ISBN : ISBN})
+    const uniqueTitle = await bookModel.findOne({title : data.title})
     if (uniqueTitle) { return res.status(400).send({ status : false, msg : "Title is already available"})}
-    const Updated = await bookModel.findOneAndUpdate({ _id:bookID},{ ... data},{ new : true})
+    const Updated = await bookModel.findOneAndUpdate({ _id:bookID},{... data},{ new : true})
     return res.status(200).send({ status : true , data: Updated})
     
 }
