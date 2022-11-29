@@ -2,10 +2,9 @@ const UserModel = require("../controller/userController");
 const ReviewModel = require("../controller/reviewController");
 const bookModel = require("../models/bookModel");
 
-const {valid,validEmail,validISBN,validMobile,validReleasedAt} = require("../validator/validation");
+const {valid,validISBN,validReleasedAt} = require("../validator/validation");
 
 const { isValidObjectId } = require("mongoose");
-const { findOneAndUpdate } = require("../models/userModel");
 //==================================================bookCreation==========================================================//
 const createBook = async function (req,res){
     try{
@@ -165,14 +164,11 @@ const deleteBooks= async function(req,res){
                  res.status(400).send({ status:false,message: "Book is already deleted" })
               }
             
-            let deleteBook = await bookModel.findOneAndUpdate({ _id: bookId }, { $set: { isDeleted: true, } }, { new: true })
+            let deleteBook = await bookModel.findOneAndUpdate({ _id: bookId }, { $set: { isDeleted: true, deletedAt: new Date()}}, { new: true })
             res.status(200).send({ status: true, message: "Book is sucessfully deleted", })
           }   
     catch (err) {
         return res.status(500).send({ status: false, message: err.message, })
   }}
 
-  module.exports.deleteBook = deleteBooks
-module.exports.updateBooks =updateBooks;
-module.exports.getBooks = getBooks;
-module.exports.createBook=createBook;
+module.exports={createBook,getBooks,getBookByParams,updateBooks,deleteBooks}
