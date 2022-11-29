@@ -1,6 +1,7 @@
-const UserModel = require("../controller/userController");
-const ReviewModel = require("../controller/reviewController");
+const userModel = require("../controller/userController");
+//const reviewModel = require("../controller/reviewController");
 const bookModel = require("../models/bookModel");
+const reviewModel = require("../models/reviewModel");
 
 const {valid,validISBN,validReleasedAt} = require("../validator/validation");
 
@@ -86,7 +87,7 @@ const getBookByParams = async function(req,res){
         if(!valid(data)){
             return res.status(400).send({status:false,message:"Please provide BookId in Params"})
         }
-        let isValidId = mongoose.Types.ObjectId.isValid(data)
+        let isValidId =isValidObjectId(data)
         if (!isValidId) {
             return res.status(400).send({ status: false, message: "Enter valid book id" })
         }
@@ -96,7 +97,7 @@ const getBookByParams = async function(req,res){
         return res.status(404).send({status:false,message:"Book not found"})
       }
 
-      const findReviewData = await reviewModel.find({bookId:data,isDeleted:false})
+      const findReviewData = await reviewModel.find({bookId:data},{isDeleted:false}).select({bookId : 1, reviewedBy : 1 , rating : 1 , review : 1})
 
       let getDetail ={
         _id:findBook._id,
@@ -120,7 +121,7 @@ const getBookByParams = async function(req,res){
   }
 }
 
-module.exports.getBookById = getBookByParams
+
 //===================================update books===========================================================//
 const updateBooks = async function (req, res){
 try {

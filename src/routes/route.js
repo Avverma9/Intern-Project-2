@@ -12,10 +12,10 @@ router.post('/login',userController.login)
 
 //............books......................
 router.post('/books',middleWare.authenticate,bookController.createBook)
-router.get('/books',middleWare.authenticate,bookController.getBooks)
-router.get('/books/:bookId',middleWare.authenticate,bookController.getBookById)
+ router.get('/books',middleWare.authenticate,bookController.getBooks)
+ router.get('/books/:bookId',middleWare.authenticate,bookController.getBookByParams)
 router.put('/books/:bookId',middleWare.authenticate,bookController.updateBooks)
-router.delete('/books/:bookId',middleWare.authenticate,bookController.deleteBook)
+ router.delete('/books/:bookId',middleWare.authenticate,bookController.deleteBooks)
 
 
 
