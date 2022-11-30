@@ -121,9 +121,9 @@ const loginUser = async function (req, res) {
 
         const token = jwt.sign({
            userId: userDetails._id.toString(),
-        }, "Blog@Management",{ expiresIn: '1hr'})
+        }, "Book@Management",{ expiresIn: '1hr'})
 
-        res.header("x-api-key", token);
+        res.setHeader("x-api-key", token);
         
        return  res.status(200).send({ status: true, msg: " you are successful login", data:token});
     } catch (error) {
