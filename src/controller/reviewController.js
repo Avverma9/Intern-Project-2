@@ -120,13 +120,9 @@ const deleteReview = async function (req, res) {
         let bookId = req.params.bookId
         let reviewId = req.params.reviewId
 
-        if (Object.keys(bookId) == 0) { return res.status(400).send({ status: false, message: "Please provide book Id" }) }
+        if (Object.keys(bookId) == 0 && Object.keys(reviewId) == 0) { return res.status(400).send({ status: false, message: "Please provide book Id or review Id" }) }
 
-        if (Object.keys(reviewId) == 0) { return res.status(400).send({ status: false, message: "please provide review Id" }) }
-
-        if (!isValidObjectId(bookId)) { return res.status(400).send({ status: false, message: 'please provide a valid Book id' }) }
-
-        if (!isValidObjectId(reviewId)) { return res.status(400).send({ status: false, message: 'please provide a valid Review id' }) }
+        if (!isValidObjectId(bookId) && !isValidObjectId(reviewId)) { return res.status(400).send({ status: false, message: 'please provide a valid Book id or review Id' }) }
 
         const findBook = await bookModel.findOne({ _id: bookId, isDeleted: false })
         if (!findBook) { return res.status(404).send({ status: false, message: "No Book Is Present with this id" }) }
