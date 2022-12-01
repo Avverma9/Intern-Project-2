@@ -5,12 +5,13 @@ const {isValidObjectId,isValid} = require("../validator/validation");
 const createReview = async function (req, res) {
     try {
         let data = req.body;
+        if(Object.keys(data).length == 0) return res.status(400).send({ status: false, message: 'please provide some data' }) 
         let id = req.params.bookId;
         const { bookId, rating } = data
 
         if (!isValidObjectId(id)) { return res.status(400).send({ status: false, message: 'please provide a valid id' }) }
 
-        if (id != bookId) { return res.status(400).send({ status: false, message: 'Please provide a valid book Id' }) }
+        if (id != bookId) { return res.status(400).send({ status: false, message: 'Please provide a same book Id in body ' }) }
 
         let books = await bookModel.findById(id);
         if (!books) { return res.status(404).send({ status: false, message: 'No book found with this id, please check yout input' }) }
@@ -18,7 +19,6 @@ const createReview = async function (req, res) {
         let is_Deleted = books.isDeleted;
         if (is_Deleted == true) { return res.status(404).send({ status: false, message: 'Book is deleted, unable to find book' }) }
 
-        if (Object.keys(data) == 0) { return res.status(400).send({ status: false, message: 'No input provided' }) }
 
         if (!isValid(bookId)) { return res.status(400).send({ status: false, message: 'Book Id is required' }) }
 
@@ -33,7 +33,7 @@ const createReview = async function (req, res) {
 
         data.reviewedAt = new Date();
 
-        const updatedBook = await bookModel.findOneAndUpdate({ _id: id }, { $inc: { reviews: +1 } }, { new: true })
+        const updatedBook = await bookModel.findOneAndUpdate({ _id: id }, { $inc: { reviews: +1 } }, { new: true }).select({__v:0})
 
         const reviews = await reviewModel.create(data);
 
@@ -50,6 +50,7 @@ const createReview = async function (req, res) {
 const updateReview = async function (req, res) {
     try {
         let data = req.body
+        if(Object.keys(data).length == 0) return res.status(400).send({ status: false, message: 'please provide some data' }) 
         let bookId = req.params.bookId
         let reviewId = req.params.reviewId
         if (!isValid(bookId)) {
