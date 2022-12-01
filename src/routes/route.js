@@ -18,8 +18,8 @@ router.put('/books/:bookId',middleWare.authenticate,bookController.updateBooks)
 router.delete('/books/:bookId',middleWare.authenticate,bookController.deleteBooks)
 //................review..................
 router.post('/books/:bookId/review',reviewController.createReview)
-router.put('/books/:bookId',middleWare.authenticate,bookController.updateBooks)
-router.delete('/books/:bookId',middleWare.authenticate,bookController.deleteBooks)
+router.put('/books/:bookId/review/:reviewId',bookController.updateBooks)
+router.delete('/books/:bookId/review/:reviewId',bookController.deleteBooks)
 
 
 
