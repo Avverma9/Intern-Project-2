@@ -124,15 +124,15 @@ const deleteReview = async function (req, res) {
 
         if (!isValidObjectId(bookId) && !isValidObjectId(reviewId)) { return res.status(400).send({ status: false, message: 'please provide a valid Book id or review Id' }) }
 
-        const findBook = await bookModel.findOne({ _id: bookId, isDeleted: false })
-        if (!findBook) { return res.status(404).send({ status: false, message: "No Book Is Present with this id" }) }
+        const filterBook = await bookModel.findOne({ _id: bookId, isDeleted: false })
+        if (!filterBook) { return res.status(404).send({ status: false, message: "No Book Is Present with this id" }) }
 
-        const findReview = await reviewModel.findOne({ _id: reviewId, isDeleted: false })
-        if (!findReview) { return res.status(404).send({ status: false, message: "No Review Is Present with this id" }) }
+        const filterReview = await reviewModel.findOne({ _id: reviewId, isDeleted: false })
+        if (!filterReview) { return res.status(404).send({ status: false, message: "No Review Is Present with this id" }) }
 
-        if (findBook.isDeleted == true) { return res.status(400).send({ status: false, message: "Book has already been deleted" }) }
+        if (filterBook.isDeleted == true) { return res.status(400).send({ status: false, message: "Book has already been deleted" }) }
 
-        if (findReview.isDeleted == true) { return res.status(400).send({ status: false, message: "Review has already been deleted" }) }
+        if (filterReview.isDeleted == true) { return res.status(400).send({ status: false, message: "Review has already been deleted" }) }
 
         const deleteReviewDetails = await reviewModel.findOneAndUpdate({ _id: reviewId }, { isDeleted: true, deletedAt: new Date() }, { new: true })
 
