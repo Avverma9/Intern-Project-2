@@ -16,8 +16,10 @@ router.get('/books',middleWare.authenticate,bookController.getBooks)
 router.get('/books/:bookId',middleWare.authenticate,bookController.getBookByParams)
 router.put('/books/:bookId',middleWare.authenticate,bookController.updateBooks)
 router.delete('/books/:bookId',middleWare.authenticate,bookController.deleteBooks)
-
-
+//................review..................
+router.post('/books/:bookId/review',reviewController.createReview)
+router.put('/books/:bookId',middleWare.authenticate,bookController.updateBooks)
+router.delete('/books/:bookId',middleWare.authenticate,bookController.deleteBooks)
 
 
 
