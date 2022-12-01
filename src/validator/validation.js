@@ -22,4 +22,14 @@ const ValidName=function(name){
     const nameRegex=/^[a-zA-Z]+(([',. -][a-zA-Z ])?[a-zA-Z])$/
     return nameRegex.test(name)
 }
-module.exports = {valid,validEmail,validISBN,validMobile,validReleasedAt,ValidName}
+const isValid = function (value) {
+    if (typeof (value) === undefined || typeof (value) === null) { return false }
+    if (typeof (value) === "string" && value.trim().length > 0) { return true }
+    if (typeof (value) === "number" && value.toString().trim().length > 0) { return true }
+}
+const isValidObjectId = function (objectId) {
+    return /^[0-9a-fA-F]{24}$/.test(objectId)
+}
+
+
+module.exports = {valid,validEmail,validISBN,validMobile,validReleasedAt,ValidName,isValid,isValidObjectId}

@@ -1,5 +1,3 @@
-const UserModel = require("../controller/userController");
-const ReviewModel = require("../controller/reviewController");
 const bookModel = require("../models/bookModel");
 const reviewModel = require("../models/reviewModel");
 
@@ -93,7 +91,6 @@ const getBookByParams = async function(req,res){
         if (!isValidId) {
             return res.status(400).send({ status: false, message: "Enter valid book id" })
         }
-
       const findBook = await bookModel.findOne({_id: data, isDeleted: false }).select({ISBN:0,__v:0});
       if(!findBook){
         return res.status(404).send({status:false,message:"Book not found"})
@@ -175,4 +172,3 @@ const deleteBooks= async function(req,res){
   }}
 
 module.exports={createBook,getBooks,getBookByParams,updateBooks,deleteBooks}
- v
