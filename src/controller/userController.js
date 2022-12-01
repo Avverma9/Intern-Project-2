@@ -91,13 +91,13 @@ const loginUser = async function (req, res) {
     try {
         let data = req.body;
         if (Object.keys(data).length == 0) {
-            return res.status(400).send({ status: false, msg: "Please Provide some data" });
+            return res.status(400).send({ status: false, message: "Please Provide some data" });
         }
 
         const { email, password } = data;
 
         if (!valid(email)) {
-            return res.status(400).send({ status: false, msg: "email is required" });
+            return res.status(400).send({ status: false, message: "email is required" });
         }
 
         if (!validEmail(email)) {
@@ -105,7 +105,7 @@ const loginUser = async function (req, res) {
         }
 
         if (!valid(password)) {
-           return  res.status(400).send({ status: false, msg: "password is required" });
+           return  res.status(400).send({ status: false, message: "password is required" });
         
         }
 
@@ -115,7 +115,7 @@ const loginUser = async function (req, res) {
         const userDetails = await userModel.findOne({ email: email, password: password });  
 
         if (!userDetails) {
-            return res.status(401).send({ status: false, msg: " email or password incorrect" });
+            return res.status(404).send({ status: false, message: " email or password incorrect or not found" });
            
         }
 
@@ -125,9 +125,9 @@ const loginUser = async function (req, res) {
 
         res.setHeader("x-api-key", token);
         
-       return  res.status(200).send({ status: true, msg: " you are successful login", data:token});
+       return  res.status(200).send({ status: true, message: " you are successful login", data:{token:token}});
     } catch (error) {
-       return  res.status(500).send({ status: false, msg: error.message });
+       return  res.status(500).send({ status: false, message: error.message });
     }
 }
 module.exports.login = loginUser
