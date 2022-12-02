@@ -19,7 +19,7 @@ const validReleasedAt = function (releasedAt) {
     return /((\d{4}[\/-])(\d{2}[\/-])(\d{2}))/.test(releasedAt)
 }
 const ValidName=function(name){
-    const nameRegex=/^[a-zA-Z]+(([',. -][a-zA-Z ])?[a-zA-Z])$/
+    const nameRegex=/^[a-zA-Z]+(([',. -][a-zA-Z ])?[a-zA-Z]*)*$/
     return nameRegex.test(name)
 }
 const isValid = function (value) {
