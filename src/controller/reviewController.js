@@ -57,15 +57,15 @@ const updateReview = async function (req, res) {
             return res.status(404).send({ messege: "Please provide  bookId" })
         }
         if (!isValidObjectId(bookId)) {
-            res.status(400).send({ status: false, message: 'You Are Providing Invalid bookId' });
-            return;
+            return res.status(400).send({ status: false, message: 'You Are Providing Invalid bookId' });
+           
         }
         if (!isValid(reviewId)) {
             return res.status(404).send({ message: "Please provide reviewId " })
         }
         if (!isValidObjectId(reviewId)) {
-            res.status(400).send({ status: false, message: 'You Are Providing Invalid reviewId' });
-            return;
+            return res.status(400).send({ status: false, message: 'You Are Providing Invalid reviewId' });
+           
         }
         let bookFound = await bookModel.findOne({ _id: bookId, isDeleted: false })
         if (!bookFound) {
@@ -121,7 +121,7 @@ const deleteReview = async function (req, res) {
         let bookId = req.params.bookId
         let reviewId = req.params.reviewId
 
-        if (Object.keys(bookId) == 0 && Object.keys(reviewId) == 0) { return res.status(400).send({ status: false, message: "Please provide book Id or review Id" }) }
+        if (!bookId && !reviewId) { return res.status(400).send({ status: false, message: "Please provide book Id or review Id" }) }
 
         if (!isValidObjectId(bookId) && !isValidObjectId(reviewId)) { return res.status(400).send({ status: false, message: 'please provide a valid Book id or review Id' }) }
 
@@ -139,10 +139,7 @@ const deleteReview = async function (req, res) {
 
         const updatedBook = await bookModel.findOneAndUpdate({ _id: bookId }, { $inc: { reviews: -1 } })
 
-        return res.status(200).send({ status: true, message: "Review deleted successfully.", data: deleteReviewDetails })
-
-
-
+        return res.status(200).send({ status: true, message: "Review deleted successfully." })
     }
     catch (error) {
         console.log(err)

@@ -41,18 +41,18 @@ const authorization = async function (req, res, next) {
                 return res.status(400).send({status:false,message:"Book not Found"})
             }
             //  let userId = checkUserId.map(x => x.userId)
-             let userId = checkUserId.userId
+            let userId = checkUserId.userId
             let id = req.decodedToken.userId
-            if (id != userId) return res.status(403).send({ status: false, msg: "You are not authorised to perform this task" })
+            if (id != userId) return res.status(403).send({ status: false, message: "You are not authorised to perform this task" })
         }
         else {
             check = req.body.userId
             if(!check){return res.status(400).send({ status : false, msg : "Please enter the user Id"})}
-            if(!isValidObjectId(check)){ return res.status(400).send({status : false, msg : " it's not a valid user Id"})}
+            if(!isValidObjectId(check)){ return res.status(400).send({status : false, message : " it's not a valid user Id"})}
             let id = req.decodedToken.userId
             console.log(check)
 
-            if (id != check) return res.status(403).send({ status: false, msg: 'You are not authorised to perform this task 🤖' })
+            if (id != check) return res.status(403).send({ status: false, message: 'You are not authorised to perform this task 🤖' })
         }
         next();
     }

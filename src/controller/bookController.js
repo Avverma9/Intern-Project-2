@@ -9,37 +9,37 @@ const createBook = async function (req,res){
     try{
         const data = req.body
         const{title,excerpt,userId,ISBN,category,subcategory,releasedAt} = data
-        if(Object.keys(data)==0){ return res.status(400).send({ status : false, msg : 'Please provide data'})}
+        if(Object.keys(data)==0){ return res.status(400).send({ status : false, message : 'Please provide data'})}
 
-        if(!valid(title)){ return res.status(400).send({ status : true, msg :"title is required"})}
+        if(!valid(title)){ return res.status(400).send({ status : true, message :"title is required"})}
 
 //===checking if title is already created===
         const duplicateTitle = await bookModel.findOne({title :title})
-        if (duplicateTitle) { return res.status(400).send({ status : false, msg : "title is already registered"})}
+        if (duplicateTitle) { return res.status(400).send({ status : false, message : "title is already registered"})}
 
-        if(!valid(excerpt)){ return res.status(400).send({status: false , msg : "excerpt is required"})}
+        if(!valid(excerpt)){ return res.status(400).send({status: false , message : "excerpt is required"})}
 
-        if(!valid(userId)){return res.status(400).send({ status : false, msg : "Please enter the user Id"})}
-        if(!isValidObjectId(userId)){ return res.status(400).send({status : false, msg : " it's not a valid user Id"})}
+        if(!valid(userId)){return res.status(400).send({ status : false, message : "Please enter the user Id"})}
+        if(!isValidObjectId(userId)){ return res.status(400).send({status : false, message : " it's not a valid user Id"})}
 
         if(!valid(ISBN)){ return res.status(400).send({ status : false , msg : " Please enter ISBN number"})}
-        if(!validISBN(ISBN)){ return res.status(400).send({ status : false , msg : " Please Enter the Valid ISBN"})}
+        if(!validISBN(ISBN)){ return res.status(400).send({ status : false , message : " Please Enter the Valid ISBN"})}
 
         const duplicateISBN = await bookModel.findOne({ISBN : ISBN})
-        if (duplicateISBN) { return res.status(400).send({ status : false, msg : "ISBN is already available"})}
+        if (duplicateISBN) { return res.status(400).send({ status : false, message : "ISBN is already available"})}
 
-        if(!valid(category)){ return res.status(400).send({status: false , msg : "category is required"})}
+        if(!valid(category)){ return res.status(400).send({status: false , message : "category is required"})}
 
-        if(!valid(subcategory)){ return res.status(400).send({status: false , msg : "subcatogory is required"})}
+        if(!valid(subcategory)){ return res.status(400).send({status: false , message : "subcatogory is required"})}
 
-        if(!validReleasedAt(releasedAt)){ return res.status(400).send({status : false, msg : "release date should be in valid format"})}
+        if(!validReleasedAt(releasedAt)){ return res.status(400).send({status : false, message : "release date should be in valid format"})}
     
         const newBookData = await bookModel.create(data)
         return res.status(201).send({ status : true , data : newBookData})
     }
  catch(err){
    
-    return res.status(500).send({ message : err.message})
+    return res.status(500).send({status:false, message : err.message})
  }
 }
 
@@ -96,7 +96,8 @@ const getBookByParams = async function(req,res){
         return res.status(404).send({status:false,message:"Book not found"})
       }
 
-      const findReviewData = await reviewModel.find({bookId:data},{isDeleted:false}).select({bookId : 1, reviewedBy : 1 , rating : 1 , review : 1})
+      const findReviewData = await reviewModel.find({bookId:data,isDeleted:false}).select({bookId : 1, reviewedBy : 1 , rating : 1 , review : 1})
+   
 
       let getDetail ={
         _id:findBook._id,
