@@ -91,28 +91,19 @@ const getBookByParams = async function(req,res){
         if (!isValidId) {
             return res.status(400).send({ status: false, message: "Enter valid book id" })
         }
-      const findBook = await bookModel.findOne({_id: data, isDeleted: false }).select({ISBN:0,__v:0});
+      let findBook = await bookModel.findOne({_id: data, isDeleted: false }).select({ISBN:0,__v:0});
       if(!findBook){
         return res.status(404).send({status:false,message:"Book not found"})
       }
 
-      const findReviewData = await reviewModel.find({bookId:data,isDeleted:false}).select({bookId : 1, reviewedBy : 1 , rating : 1 , review : 1})
+      let findReviewData = await reviewModel.find({bookId:data,isDeleted:false}).select({bookId : 1, reviewedBy : 1 , rating : 1 , review : 1})
    
 
-      let getDetail ={
-        _id:findBook._id,
-        title:findBook.title,
-        excerpt:findBook.excerpt,
-        userId:findBook.userId,
-        category:findBook.category,
-        subcategory:findBook.subcategory,
-        isDeleted:findBook.isDeleted,
-        reviews:findBook.reviews,
-        releasedAt:findBook.releasedAt,
-        reviewsData:findReviewData
 
-      }
-      return res.status(200).send({status:false,message:"Book list",data:getDetail})
+
+          findBook=  JSON.parse(JSON.stringify(findBook))
+          findBook.reviewsData = findReviewData
+      return res.status(200).send({status:false,message:"Book list",data:findBook})
 
   }
   catch(err){

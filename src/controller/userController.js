@@ -1,6 +1,6 @@
 const userModel = require('../models/userModel')
 const jwt  = require('jsonwebtoken')
-const{valid,validEmail,validMobile,ValidName} = require('../validator/validation')
+const{valid,validEmail,validMobile,ValidName,isValidPincode} = require('../validator/validation')
 
 const createUser = async function(req,res){
     try{
@@ -33,7 +33,7 @@ const createUser = async function(req,res){
             return res.status(400).send({status:false,message:"phone number is required"})
         }
         if(!validMobile(phone)){
-            return res.status(400).send({status:false,message:"phone number is invalid"})  
+            return res.status(400).send({status:false,message:"phone number only in Indian Number"})  
         }
 
         const phoneRegistered = await userModel.findOne({phone:phone});
@@ -72,9 +72,10 @@ const createUser = async function(req,res){
             if (!valid(address.pincode)) {
                 return res.status(400).send({ status: false, message: "Pincode cannot be empty." })
             }
+            if(!isValidPincode(address.pincode)){
+                return res.status(400).send({ status: false, message: "Pincode is invalid." })
+            }
         }
-
-
         //.........................................
         // Validation ends
         const newUser = await userModel.create(data);

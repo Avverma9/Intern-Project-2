@@ -12,7 +12,8 @@ const validEmail=function(email){
     return emailRegex.test(email)
 }
 const validMobile=function(mobile){
-    const mobileRegex=/^\d{10}$/
+    const mobileRegex=/^[6789]\d{9}$/
+
     return mobileRegex.test(mobile)
 }
 const validReleasedAt = function (releasedAt) {
@@ -30,6 +31,9 @@ const isValid = function (value) {
 const isValidObjectId = function (objectId) {
     return /^[0-9a-fA-F]{24}$/.test(objectId)
 }
+const isValidPincode = function (data) {
+  const pincodeRegex = /^[0-9]{6}$/;
+  return pincodeRegex.test(data);
+}
 
-
-module.exports = {valid,validEmail,validISBN,validMobile,validReleasedAt,ValidName,isValid,isValidObjectId}
+module.exports = {valid,validEmail,validISBN,validMobile,validReleasedAt,ValidName,isValid,isValidObjectId,isValidPincode}
