@@ -1,6 +1,4 @@
 const mongoose = require('mongoose')
-const joi = require('joi')
-
 const createUser = new mongoose.Schema({
     title:{
         type:String,

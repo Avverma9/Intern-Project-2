@@ -66,6 +66,9 @@ const createUser = async function(req,res){
             if (!valid(address.street)) {
                 return res.status(400).send({ status: false, message: "Street address cannot be empty  ." })
             }
+            if(!ValidName(address.city)){
+                return res.status(400).send({status:false,message:"city is only accepted in alphabet"})
+            }
             if (!valid(address.city)) {
                 return res.status(400).send({ status: false, message: "City cannot be empty  ." })
             }
