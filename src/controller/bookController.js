@@ -1,16 +1,60 @@
 const bookModel = require("../models/bookModel");
 const reviewModel = require("../models/reviewModel");
+const multer = require('multer');
+const aws = require('aws-sdk');
 
 const {valid,validISBN,validReleasedAt} = require("../validator/validation");
 const mongoose = require('mongoose')
 const { isValidObjectId } = require("mongoose");
+
+
+
+aws.config.update(
+    {
+        accessKeyId: "AKIAY3L35MCRZNIRGT6N",
+        secretAccessKey: "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",
+        region: "ap-south-1"
+    }
+)
+//=========================================AWS==========================================//
+let uploadFile = async (file) => {
+    return new Promise( function(resolve, reject) {
+        //this function will upload file to aws and return the link
+        let s3 = new aws.S3({ apiVersion: "2006-03-01" }) //we will be using s3 service of aws
+        //  await uploadFile(files[0])
+        var uploadParams = {
+            ACL: "public-read",
+            Bucket: "classroom-training-bucket", // HERE
+            Key: "ankit_verma/" + file.originalname, // HERE 
+            Body: file.buffer
+        }
+
+      s3.upload(uploadParams, function (err, data) {
+            if (err) { 
+                return reject({ "error": err }) 
+            }
+
+            console.log(data)
+            console.log(" file uploaded succesfully ")
+            return resolve(data.Location) // HERE
+          }
+        )
+
+    
+
+    }
+    )
+}
 //==================================================bookCreation==========================================================//
 const createBook = async function (req,res){
     try{
         const data = req.body
+        const files = req.files;
+        
+        
         const{title,excerpt,userId,ISBN,category,subcategory,releasedAt} = data
         if(Object.keys(data)==0){ return res.status(400).send({ status : false, message : 'Please provide data'})}
-
+        if (files.length == 0) { return res.status(400).send({ status: false, message: "No file found" }) }
         if(!valid(title)){ return res.status(400).send({ status : true, message :"title is required"})}
 
 //===checking if title is already created===
@@ -33,7 +77,10 @@ const createBook = async function (req,res){
         if(!valid(subcategory)){ return res.status(400).send({status: false , message : "subcatogory is required"})}
 
         if(!validReleasedAt(releasedAt)){ return res.status(400).send({status : false, message : "release date should be in valid format"})}
-    
+        if (files && files.length > 0) {
+            let uploadedFileURL = await uploadFile(files[0]);
+            data.bookCover = uploadedFileURL;
+          }
         const newBookData = await bookModel.create(data)
         return res.status(201).send({ status : true , data : newBookData})
     }
@@ -42,6 +89,8 @@ const createBook = async function (req,res){
     return res.status(500).send({status:false, message : err.message})
  }
 }
+
+
 
 //===========================================getting books by query param===================================================//
 const getBooks = async function(req,res){
